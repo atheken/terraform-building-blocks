@@ -12,4 +12,5 @@ variable base_path {
 
 variable base_object {
   description = "A starting object into which additional json objects will be merged."
+  default = {}
 }
