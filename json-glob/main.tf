@@ -1,5 +1,6 @@
 locals {
-  loaded_files = [for v in var.files : jsondecode(v.required ? file("${var.base_path}/${v.path}") : ( fileexists("${var.base_path}/${v.path}") ? file("${var.base_path}/${v.path}") : "{}" ))]
+  searched_files = flatten([ for v in var.files : sort(fileset(var.base_path, v)) ])
+  loaded_files = [for v in local.searched_files : jsondecode(file("${var.base_path}/${v}"))]
 }
 
 output result {

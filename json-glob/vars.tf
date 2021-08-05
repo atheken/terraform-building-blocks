@@ -1,9 +1,6 @@
 variable files {
-  type = list(object({
-    path = string
-    required = bool
-  }))
-  description = "A list of files to load, some can be optional"
+  type = list(string)
+  description = "A list of glob patters to load. If the pattern turns up set a files, the results will be sorted lexicographically according to the terraform sort pattern before being loaded."
 }
 
 variable base_path {
