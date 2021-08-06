@@ -16,17 +16,35 @@ variable build_arguments {
   default  = []
 }
 
-locals {
-  image = "${var.image_name}:${var.tag}"
+variable force_build {
+  description = "When set to true, forces a rebuild of the image."
+  default = false
 }
 
-## This always _attempts_ to build the docker container, we take advantage of docker's layer caching
-## and assume this will be fast/skipped most of the time:
-data external build_container {
-  working_dir = var.working_dir
-  program = flatten(concat(["${module.path}/docker_image_build.sh", local.image], list(var.build_arguments...)))
+locals {
+  image = "${var.image_name}:${var.tag}"
+  rebuild_trigger = var.force_build ? uuid() : "false"
+}
+
+module checksum {
+  source = "../directory-checksum"
+  base_path = var.working_dir
+  files = ["./**/*", "./*"]
+}
+
+## This always _attempts_ to build the docker container whenever files in the working directory changes:
+resource null_resource build_container {
+  triggers = [
+    module.checksum.result.value,
+    local.rebuild_trigger
+  ]
+  
+  provisioner local-exec {
+    working_dir = var.working_dir
+    command = join(" ", concat(["${path.module}/docker_image_build.sh", local.image], list(var.build_arguments...)))  
+  }
 }
 
 output result {
-  value = merge( { image : local.image }, data.external.build_container.result)
+  value = merge( { image : local.image })
 }
