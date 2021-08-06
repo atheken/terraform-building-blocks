@@ -26,7 +26,7 @@ locals {
   rebuild_trigger = var.force_build ? uuid() : "false"
 }
 
-module checksum {
+module file_checksums {
   source = "../directory-checksum"
   base_path = var.working_dir
   files = ["./**/*", "./*"]
@@ -35,7 +35,7 @@ module checksum {
 ## This always _attempts_ to build the docker container whenever files in the working directory changes:
 resource null_resource build_container {
   triggers = [
-    module.checksum.result.value,
+    module.file_checksums.result.checksum,
     local.rebuild_trigger
   ]
   
