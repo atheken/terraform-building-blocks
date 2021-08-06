@@ -15,13 +15,14 @@ variable assume_role_session_name {
   default = "ecr-publish"
 }
 
+locals {
+  assume_role_args = length(var.publisher_role_arn) > 0 ? "${var.publisher_role_arn} ${var.assume_role_session_name}" : ""
+}
+
 data external container_checksum {
   program = ["${abspath(path.module)}/container-checksum.sh", var.local_image ]
 }
 
-locals {
-  assume_role_args = length(var.publisher_role_arn) > 0 ? "${var.publisher_role_arn} ${var.assume_role_session_name}"
-}
 
 resource null_resource image_push {
   triggers = {
@@ -31,7 +32,6 @@ resource null_resource image_push {
     command = "${abspath(path.module)}/push-ecr.sh ${var.local_image} ${var.registry_url} ${local.assume_role_args}"
   }
 }
-
 
 data aws_caller_identity identity {
 
