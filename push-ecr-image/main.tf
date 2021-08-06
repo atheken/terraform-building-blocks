@@ -31,3 +31,16 @@ resource null_resource image_push {
     command = "${abspath(path.module)}/push-ecr.sh ${var.local_image} ${var.registry_url} ${local.assume_role_args}"
   }
 }
+
+
+data aws_caller_identity identity {
+
+}
+
+data aws_region current_region {
+
+}
+
+output image_url {
+  value = "${data.aws_caller_identity.identity.account_id}.dkr.ecr.${data.aws_region.current_region.name}.amazonaws.com/${var.local_image}"
+}

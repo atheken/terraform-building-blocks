@@ -63,3 +63,16 @@ resource aws_ecr_lifecycle_policy retention_policy {
     ]
   })
 }
+
+
+data aws_caller_identity identity {
+
+}
+
+data aws_region current_region {
+
+}
+
+output registry_url {
+  value = "${data.aws_caller_identity.identity.account_id}.dkr.ecr.${data.aws_region.current_region.name}.amazonaws.com"
+}

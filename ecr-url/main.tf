@@ -11,6 +11,10 @@ data aws_region current_region {
 
 }
 
-output url {
+output image_url {
   value = "${data.aws_caller_identity.identity.account_id}.dkr.ecr.${data.aws_region.current_region.name}.amazonaws.com/${var.ecr_image}"
+}
+
+output registry_url {
+  value = "${data.aws_caller_identity.identity.account_id}.dkr.ecr.${data.aws_region.current_region.name}.amazonaws.com"
 }
