@@ -24,7 +24,7 @@ variable force_build {
 locals {
   image = "${var.image_name}:${var.tag}"
   rebuild_trigger = var.force_build ? uuid() : "false"
-  default_args = ["${path.module}/docker_image_build.sh", local.image]
+  default_args = ["${abspath(path.module)}/docker_image_build.sh", local.image]
   args = length(var.build_arguments) > 0 ? concat(local.default_args, var.build_arguments) : local.default_args
 }
 
