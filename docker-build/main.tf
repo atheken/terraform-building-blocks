@@ -34,10 +34,10 @@ module file_checksums {
 
 ## This always _attempts_ to build the docker container whenever files in the working directory changes:
 resource null_resource build_container {
-  triggers = [
-    module.file_checksums.result.checksum,
-    local.rebuild_trigger
-  ]
+  triggers = {
+    file_checksums = module.file_checksums.result
+    rebuild_trigger = local.rebuild_trigger
+  }
   
   provisioner local-exec {
     working_dir = var.working_dir
