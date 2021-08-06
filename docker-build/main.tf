@@ -24,6 +24,8 @@ variable force_build {
 locals {
   image = "${var.image_name}:${var.tag}"
   rebuild_trigger = var.force_build ? uuid() : "false"
+  default_args = ["${path.module}/docker_image_build.sh", local.image]
+  args = len(var.build_arguments) > 0 ? concat(local.default_args, var.build_arguments) : local.default_args
 }
 
 module file_checksums {
@@ -41,10 +43,10 @@ resource null_resource build_container {
   
   provisioner local-exec {
     working_dir = var.working_dir
-    command = join(" ", concat(["${path.module}/docker_image_build.sh", local.image], list(var.build_arguments...)))  
+    command = join(" ", local.args)  
   }
 }
 
 output result {
-  value = merge( { image : local.image })
+  value = { image : local.image }
 }
