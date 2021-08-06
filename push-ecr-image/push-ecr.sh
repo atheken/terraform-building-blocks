@@ -3,8 +3,8 @@ set -euo pipefail
 
 image=$1
 registry_url=$2
-assume_role_arn=$3
-assume_role_session_name=$4
+assume_role_arn=${3:-''}
+assume_role_session_name=${4:-'terraform-push-docker'}
 
 docker tag $image $registry_url/$image
 
