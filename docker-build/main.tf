@@ -31,7 +31,7 @@ locals {
 module file_checksums {
   source = "../directory-checksum"
   base_path = var.working_dir
-  files = ["./**/*", "./*"]
+  files = ["./**/*"]
 }
 
 ## This always _attempts_ to build the docker container whenever files in the working directory changes:
