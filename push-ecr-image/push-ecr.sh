@@ -20,7 +20,7 @@ if [[ ! -z $assume_role_arn ]]; then
   
 fi
 
-docker logout $registry_url
+docker logout $registry_url 2>1 || 0
 aws ecr get-login-password | docker login --username AWS --password-stdin $registry_url
 docker push $registry_url/$image
-docker logout $registry_url
+docker logout $registry_url 2>1 || 0
