@@ -1,5 +1,7 @@
 FROM alpine:3.11
-RUN apk add docker-cli bash
+ENV AWS_SDK_LOAD_CONFIG=true
+ENV AWS_PAGER=''
+RUN apk add docker-cli bash jq
 RUN apk add --update \
     python \
     python-dev \
