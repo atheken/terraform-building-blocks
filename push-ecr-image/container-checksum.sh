@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-docker images $1 --format '{ "ImageID": "{{.ID}}" }'
+result=$(docker images $1 --format '{ "ImageID": "{{.ID}}" }')
+echo -n ${result:-'{ "ImageID": "null" }'}
