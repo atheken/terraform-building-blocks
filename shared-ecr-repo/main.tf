@@ -12,12 +12,18 @@ variable untagged_image_retention_in_days {
   default     = -1
 }
 
+variable additional_policy_statements {
+  description = "Additional access policy statements for this repo."
+  type = list(object)
+  default = []
+}
+
 resource aws_ecr_repository_policy access_policy {
   count      = length(var.reader_principal_org_ids) > 0 ? 1 : 0
   repository = aws_ecr_repository.ecr_repo.name
   policy = jsonencode({
     Version : "2008-10-17",
-    Statement : [
+    Statement : concat([
       {
         Sid : "read-access",
         Effect : "Allow",
@@ -38,7 +44,7 @@ resource aws_ecr_repository_policy access_policy {
           "ecr:ListImages"
         ]
       }
-    ]
+    ], var.additional_policy_statements)
   })
 }
 
