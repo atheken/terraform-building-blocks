@@ -14,7 +14,6 @@ variable untagged_image_retention_in_days {
 
 variable additional_policy_statements {
   description = "Additional access policy statements for this repo."
-  type = list(object)
   default = []
 }
 
