@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 3"
+    }
+  }
+}
+
 resource aws_ecr_repository ecr_repo {
   name = var.repository_name
 }

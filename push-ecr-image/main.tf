@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 3"
+    }
+  }
+}
+
 variable registry_url {
   description = "The registry into which the local container should be pushed"
 }
