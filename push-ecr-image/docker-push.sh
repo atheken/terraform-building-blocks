@@ -20,7 +20,7 @@ if [[ ! -z $assume_role_arn ]]; then
   
 fi
 
-repo_name=$(echo $image | sed -E 's#([^:]+)#\1#')
+repo_name=$(echo $1 | sed -E 's#([^:]+):[^:]+#\1#')
 image_tag=$(echo $image | sed -E 's#[^:]+:([^:]+)#\1#')
 
 lookup_result=$(aws ecr describe-images --repository-name=$repo_name --image-ids=imageTag=$image_tag 2> /dev/null)
