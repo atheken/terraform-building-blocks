@@ -20,5 +20,14 @@ if [[ ! -z $assume_role_arn ]]; then
   
 fi
 
-aws ecr get-login-password | docker login --username AWS --password-stdin $registry_url
-docker push $registry_url/$image
+repo_name=$(echo $image | sed -E 's#([^:]+)#\1#')
+image_tag=$(echo $image | sed -E 's#[^:]+:([^:]+)#\1#')
+
+aws ecr describe-images --repository-name=$repo_name --image-ids=imageTag=$image_tag 2> /dev/null
+
+if [[ $? == 0 ]] ; then
+  echo "Image exits, no need to push."
+else
+  aws ecr get-login-password | docker login --username AWS --password-stdin $registry_url
+  docker push $registry_url/$image
+fi
