@@ -1,7 +1,7 @@
 variable name {}
 
 variable architecture {
-  default = "arm64"
+  default = "x86_64"
 }
 
 variable command {

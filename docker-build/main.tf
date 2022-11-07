@@ -12,7 +12,7 @@ variable tag {
 }
 
 variable architecture {
-  default = "arm64"
+  default = "x86_64"
 }
 
 variable build_arguments {

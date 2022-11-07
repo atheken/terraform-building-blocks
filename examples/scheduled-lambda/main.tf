@@ -30,7 +30,8 @@ provider "aws" {
 }
 
 module "scheduled-lambda" {
-  source = "../../scheduled-lambda"
+  source = "github.com/atheken/terraform-building-blocks//scheduled-lambda?ref=2022-11-07"
+  architecture = "arm64"
   name = "${var.prefix}_example_cron_job"
   working_dir = "./cron-job-container"
   execution_concurrency = -1
