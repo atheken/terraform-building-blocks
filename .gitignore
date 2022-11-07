@@ -1,4 +1,6 @@
+.DS_Store
 .idea
 .terraform
 *.tfstate
 *.tfstate.backup
+*.auto.tfvars

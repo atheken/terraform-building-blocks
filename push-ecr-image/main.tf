@@ -20,12 +20,12 @@ variable publisher_role_arn {
   default = ""
 }
 
-variable assume_role_session_name {
-  default = "ecr-publish"
+data aws_caller_identity id {
+  
 }
 
 locals {
-  assume_role_args = length(var.publisher_role_arn) > 0 ? "${var.publisher_role_arn} ${var.assume_role_session_name}" : ""
+  assume_role_args = length(var.publisher_role_arn) > 0 ? "${var.publisher_role_arn}" : ""
 }
 
 data external container_checksum {

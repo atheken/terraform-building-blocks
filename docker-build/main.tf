@@ -7,8 +7,12 @@ variable image_name {
 }
 
 variable tag {
-  description = "The container tag."
-  default = "latest"
+  description = "The container tag. If the tag is not set, the checksum of the source files will be used."
+  default = ""
+}
+
+variable architecture {
+  default = "arm64"
 }
 
 variable build_arguments {
@@ -21,17 +25,19 @@ variable force_build {
   default = false
 }
 
-locals {
-  image = "${var.image_name}:${var.tag}"
-  rebuild_trigger = var.force_build ? uuid() : "false"
-  default_args = ["${abspath(path.module)}/docker_image_build.sh", local.image]
-  args = length(var.build_arguments) > 0 ? concat(local.default_args, var.build_arguments) : local.default_args
-}
-
 module file_checksums {
   source = "../directory-checksum"
   base_path = var.working_dir
   files = ["./**/*"]
+}
+
+locals {
+  //if the tag is set, use it, otherwise, tag based on the file_checksum.
+  detected_tag = length(var.tag) > 0 ? var.tag : substr(module.file_checksums.result.checksum, 0, 32)
+  image = "${var.image_name}:${local.detected_tag}"
+  rebuild_trigger = var.force_build ? uuid() : "false"
+  default_args = ["${abspath(path.module)}/docker_image_build.sh", local.image, "--platform", var.architecture]
+  args = length(var.build_arguments) > 0 ? concat(local.default_args, var.build_arguments) : local.default_args
 }
 
 ## This always _attempts_ to build the docker container whenever files in the working directory changes:
