@@ -15,9 +15,9 @@ do
   # Extract request ID by scraping response headers received above
   REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
 
-  # Run the handler function from the script
-  RESPONSE=$($(echo "$_HANDLER" | cut -d. -f2) "$EVENT_DATA")
+  # Run the handler function from the script (the script is expected to log to STDOUT, and it will not produce a response)
+  $(echo "$_HANDLER" | cut -d. -f2) "$EVENT_DATA"
 
   # Send the response
-  curl -q -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response"  -d "$RESPONSE"
+  curl -qsS -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response" > /dev/null
 done
