@@ -35,6 +35,6 @@ module "scheduled-lambda" {
   name = "${var.prefix}_example_cron_job"
   working_dir = "./cron-job-container"
   execution_concurrency = -1
-  command = ["cron.job"]
+  command = ["job.apply"]
   cron_schedules = ["cron(5 * * * ? *)"]
 }
