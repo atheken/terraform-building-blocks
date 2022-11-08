@@ -31,11 +31,16 @@ module file_checksums {
   files = ["./**/*"]
 }
 
+data external image_count {
+  program = ["${abspath(path.module)}/container_exists.sh", local.image]
+}
+
 locals {
+  
   //if the tag is set, use it, otherwise, tag based on the file_checksum.
   detected_tag = length(var.tag) > 0 ? var.tag : substr(module.file_checksums.result.checksum, 0, 32)
   image = "${var.image_name}:${local.detected_tag}"
-  rebuild_trigger = var.force_build ? uuid() : "false"
+  rebuild_trigger = var.force_build || trim(data.external.image_count.result.matching_images, " \t\n") != "1" ? uuid() : "false"
   default_args = ["${abspath(path.module)}/docker_image_build.sh", local.image, "--platform", var.architecture]
   args = length(var.build_arguments) > 0 ? concat(local.default_args, var.build_arguments) : local.default_args
 }
