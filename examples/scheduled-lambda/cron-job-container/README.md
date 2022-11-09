@@ -1,0 +1,1 @@
+This is a minimal alpine-based container that shows how to run a bash script as a lambda.
